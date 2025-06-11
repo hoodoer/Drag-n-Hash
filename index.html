@@ -43,7 +43,7 @@
 				console.log("Mouse has returned after dragging!");
 				dragging = false;
 
-				fetch('/dragnhash.png')
+				fetch('dragnhash.png')
 				.then(res => res.blob())
 				.then(blob => {
 					const url = URL.createObjectURL(blob);
