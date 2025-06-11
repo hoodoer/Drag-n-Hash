@@ -27,6 +27,8 @@
   <header class="border-b border-green-600 py-6 px-4 text-center">
     <h1 class="text-3xl md:text-4xl tracking-widest text-green-400 flicker select-none">[ DragonHash ]</h1>
     <p class="mt-2 text-sm md:text-base text-green-300">Chromium drag‑and‑drop NTLM leakage proof‑of‑concept</p>
+    <p class="mt-2 text-sm md:text-base text-green-300">Brought to you by TrustedSec</p>
+
   </header>
 
   <main class="flex-grow flex items-start justify-center px-4 py-10">
@@ -38,12 +40,12 @@ $ sudo responder -I eth0 -wrf
 $ export LISTENER_IP=&lt;your_ip&gt;
 $ #           ┌── drag this over to desktop ──┐
 $ #           ↓                              ↓</code></pre>
-        <p class="mt-4">Follow the prompts below · <span class="italic">“pwnage awaits”</span></p>
+        <p class="mt-4">Follow the prompts below</p>
       </section>
 
       <!-- IP input -->
       <section class="bg-black/80 border border-green-800 rounded-lg p-6 shadow-lg">
-        <h2 class="text-lg text-green-400 mb-2">1▸ Configure SMB Responder server</h2>
+        <h2 class="text-lg text-green-400 mb-2">1▸ IP Address of your SMB Responder server</h2>
         <form id="ipForm" class="flex flex-col sm:flex-row gap-4">
           <input type="text" id="ip" placeholder="192.168.56.1" required pattern="^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$" class="flex-1 bg-transparent border border-green-600 focus:outline-none focus:ring-0 px-3 py-2 placeholder-green-700" />
           <button type="submit" class="border border-green-500 hover:bg-green-600 hover:text-black px-4 py-2">save</button>
@@ -69,6 +71,7 @@ $ #           ↓                              ↓</code></pre>
 
   <footer class="border-t border-green-600 py-4 text-center text-xs text-green-600">
     © 2025 TrustedSec Research · <a href="https://github.com/hoodoer/DragonHash" class="underline">view source</a>
+    <a href="https://x.com/hoodoer">Contact Hoodoer</a>
   </footer>
 
   <!-- JS behaviour -->
